@@ -90,18 +90,17 @@ module.exports = function (grunt) {
           if (err) {
             throw err;
           }
-          stream.on('data', function (data, extended) {
+          stream.on('data', function (data) {
             var out = String(data);
-            if (extended === 'stderr') {
+            grunt.log.write(out);
+          });
+          stream.stderr.on('data', function(err){
               if (!options.suppressRemoteErrors) {
-                grunt.log.warn(out);
+                  grunt.log.warn(err);
               }
               else {
-                grunt.verbose.warn(out);
+                  grunt.verbose.warn(err);
               }
-            } else {
-              grunt.log.write(out);
-            }
           });
           stream.on('end', function () {
             grunt.verbose.writeln('Stream :: EOF');
